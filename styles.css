@@ -45,13 +45,13 @@ h1 {
   flex-shrink: 0;
   margin-top: 13px;
   border-radius: 8px;
-  background-color: #28a9f1;
+  background-color: #fde68a;
   font-weight: bold;
   font-size: 25px;
 }
 
 #btn:hover {
-  background-color: #1b98e0;
+  background-color: #fbbf24;
   cursor: pointer;
 }
 
@@ -65,12 +65,13 @@ ul {
 
 ul li {
   margin: 10px 0;
-  padding: 13px;
+  padding: 0 13px;
   background-color: #ffffff;
   color: black;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: left;
+  position: relative;
 }
 
 #send {
@@ -85,6 +86,7 @@ ul li {
   background-color: #92400e;
   border: none;
   margin-top: 9px;
+  gap: 2px;
   text-align: center;
   color: white;
 }
@@ -92,4 +94,12 @@ ul li {
 ::placeholder {
   color: white;
   opacity: 1;
+}
+
+ul li span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }

@@ -4,6 +4,7 @@ import {
   ref,
   push,
   onValue,
+  update,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const appSettings = {
@@ -13,20 +14,27 @@ const appSettings = {
 
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
-const endListInDb = ref(database, "endList");
+const messageListInDb = ref(database, "messageList");
 
 const inputEl = document.getElementById("input");
 const buttonEl = document.getElementById("btn");
-const endListEl = document.getElementById("end-list");
+const messageListEl = document.getElementById("message-list");
 const fromEl = document.getElementById("from");
 const toEl = document.getElementById("to");
+let likeCounter = 0;
 
-function InsertEndList(item) {
-  let endID = item[0];
-  let endValue = item[1];
+function InsertMessageList(item) {
+  let messageID = item[0];
+  let messageValue = item[1];
   let li = document.createElement("li");
-  li.textContent = endValue;
-  endListEl.append(li);
+  li.innerHTML = `<h5>${messageValue.to}</h5>${messageValue.message}<h5>${messageValue.from}<span>❤ ${messageValue.likes}</span></h5> `;
+  messageListEl.append(li);
+  li.addEventListener("dblclick", function () {
+    likeCounter++;
+    update(ref(database, `messageList/${messageID}`), {
+      likes: likeCounter,
+    });
+  });
 }
 
 function clearField(field) {
@@ -35,22 +43,30 @@ function clearField(field) {
 
 buttonEl.addEventListener("click", function () {
   let inputValue = inputEl.value;
-  push(endListInDb, inputValue);
+  let fromValue = `From: ${fromEl.value}`;
+  let toValue = `To: ${toEl.value}`;
+
+  push(messageListInDb, {
+    message: inputValue,
+    from: fromValue,
+    to: toValue,
+    likes: likeCounter,
+  });
   clearField(inputEl);
   clearField(fromEl);
   clearField(toEl);
 });
 
-onValue(endListInDb, (snapshot) => {
-  endListEl.innerHTML = "";
+onValue(messageListInDb, (snapshot) => {
+  messageListEl.innerHTML = "";
   if (snapshot.exists()) {
-    let endListArray = Object.entries(snapshot.val());
-    for (let i = endListArray.length - 1; i >= 0; i--) {
-      let currentEnd = endListArray[i];
-      InsertEndList(currentEnd);
+    let messageListArray = Object.entries(snapshot.val());
+    for (let i = messageListArray.length - 1; i >= 0; i--) {
+      let currentMessage = messageListArray[i];
+      InsertMessageList(currentMessage);
     }
   } else {
-    endListEl.innerHTML = "No messages here yet..";
-    endListEl.style.color = "white";
+    messageListEl.innerHTML = "No messages here yet..";
+    messageListEl.style.color = "white";
   }
 });
