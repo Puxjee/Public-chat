@@ -43,7 +43,7 @@ function InsertMessageList(item) {
     const reportMessage = prompt("Write a report about this message");
       push(reportListInDb, {
         messageID: messageID,
-        report: `This message was reported ${reports} times`,
+        report: reportMessage,
     })
   })
   messageListEl.append(li);
