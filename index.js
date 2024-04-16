@@ -15,6 +15,7 @@ const appSettings = {
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const messageListInDb = ref(database, "messageList");
+const reportListInDb = ref(database, "reportList");
 
 const inputEl = document.getElementById("input");
 const buttonEl = document.getElementById("btn");
@@ -27,7 +28,24 @@ function InsertMessageList(item) {
   let messageID = item[0];
   let messageValue = item[1];
   let li = document.createElement("li");
-  li.innerHTML = `<h5>${messageValue.to}</h5>${messageValue.message}<h5>${messageValue.from}<span>❤ ${messageValue.likes}</span></h5> `;
+  let report = document.createElement("button");
+  let reports = 0;
+  report.innerHTML = "Report";
+  report.classList.add("report-btn");
+  li.innerHTML = `
+    <h5>${messageValue.to}</h5>
+    ${messageValue.message}
+    <h5>${messageValue.from}<span>❤ ${messageValue.likes}</span></h5>
+  `;
+  li.append(report);
+  report.addEventListener("click", function () {
+    reports++;
+    const reportMessage = prompt("Write a report about this message");
+      push(reportListInDb, {
+        messageID: messageID,
+        report: `This message was reported ${reports} times`,
+    })
+  })
   messageListEl.append(li);
   li.addEventListener("dblclick", function () {
     likeCounter++;
@@ -45,6 +63,15 @@ buttonEl.addEventListener("click", function () {
   let inputValue = inputEl.value;
   let fromValue = `From: ${fromEl.value}`;
   let toValue = `To: ${toEl.value}`;
+  const inputsArray = [inputEl, fromEl, toEl];
+  for (const input of inputsArray) {
+    if (!input.value) {
+      input.style.border = "3px solid red";
+      return;
+    } else {
+      input.style.border = "none";
+    }
+  }
 
   push(messageListInDb, {
     message: inputValue,
@@ -70,3 +97,5 @@ onValue(messageListInDb, (snapshot) => {
     messageListEl.style.color = "white";
   }
 });
+
+

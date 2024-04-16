@@ -103,3 +103,25 @@ ul li span {
   margin-right: 10px;
   margin-bottom: 10px;
 }
+
+.report-btn{
+  width: 100px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #92400e;
+  border: none;
+  margin-top: 9px;
+  gap: 2px;
+  text-align: center;
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.report-btn:hover {
+  background-color: #fbbf24;
+  cursor: pointer;
+}
